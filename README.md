@@ -13,3 +13,8 @@ In the previous [project](https://github.com/hacizeynal/Continuous-Integration-U
 * ECR
 * ECS
 * AWS CLI
+
+High level overview for the project is described below
+
+[![Screenshot-2022-11-09-at-09-08-59.png](https://i.postimg.cc/pTQQxK6L/Screenshot-2022-11-09-at-09-08-59.png)](https://postimg.cc/47dHQHGD)
+
