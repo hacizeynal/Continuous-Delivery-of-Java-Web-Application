@@ -6,7 +6,7 @@ pipeline{
     agent any
     tools{
         maven "MAVEN3"
-        jdk "ORACLEJDK8"
+        jdk "OracleJDK8"
     }
     environment{
         SNAP_REPO = "devops-snapshot"
@@ -14,7 +14,7 @@ pipeline{
         NEXUS_PASS = "Krakow123"
         RELEASE_REPO = "devops-release"
         CENTRAL_REPO = "devops-proxy"
-        NEXUSIP = "172.18.154.251"
+        NEXUSIP = "172.18.169.33"
         NEXUSPORT = "8081"
         NEXUS_GRP_REPO = "devops-group"
         NEXUS_LOGIN = "nexuslogin"
