@@ -18,7 +18,7 @@ pipeline{
         NEXUSPORT = "8081"
         NEXUS_GRP_REPO = "devops-group"
         NEXUS_LOGIN = "nexuslogin"
-        SONARSCANNER = "sonarqubescanner"
+        SONARSCANNER = "sonarscanner"
         SONARSERVER = "sonarserver"
 
     }
