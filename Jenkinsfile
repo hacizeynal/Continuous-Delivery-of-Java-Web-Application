@@ -92,7 +92,7 @@ pipeline{
                   artifacts: [
                     [artifactId: 'zhajili-DevOps',
                      classifier: '',
-                     file: 'target/javaapp-v2.war',
+                     file: 'target/vprofile-v2.war',
                      type: 'war']
                   ]
                 )
