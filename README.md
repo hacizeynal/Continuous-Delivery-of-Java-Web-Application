@@ -28,6 +28,11 @@ High level overview for the project is described below
 
 We will create new IAM user **cicdjenkins** ,this user will access to ECR repository and ECS service.
 Jenkins will run AWS CLI from pipeline and this user will execute commands for ECR and ECS.
- 
+
+### Configure Elastic Container Registry
+
+We will create private artifact repository on AWS and upload our generated artifacts from Jenkins pipeline to ECR.
+
+[![Screenshot-2022-11-11-at-20-22-36.png](https://i.postimg.cc/50QWsDgJ/Screenshot-2022-11-11-at-20-22-36.png)](https://postimg.cc/dkFf1HgN)
 
 
