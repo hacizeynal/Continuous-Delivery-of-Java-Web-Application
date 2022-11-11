@@ -24,4 +24,10 @@ High level overview for the project is described below
 
 [![Screenshot-2022-11-09-at-20-39-27.png](https://i.postimg.cc/sgMhZQ3j/Screenshot-2022-11-09-at-20-39-27.png)](https://postimg.cc/Xr0JRvZm)
 
+### Create IAM User
+
+We will create new IAM user **cicdjenkins** ,this user will access to ECR repository and ECS service.
+Jenkins will run AWS CLI from pipeline and this user will execute commands for ECR and ECS.
+ 
+
 
