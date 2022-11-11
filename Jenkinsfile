@@ -90,21 +90,21 @@ pipeline{
                   repository: "${RELEASE_REPO}",
                   credentialsId: "${NEXUS_LOGIN}",
                   artifacts: [
-                    [artifactId: 'vproapp',
+                    [artifactId: 'zhajili',
                      classifier: '',
-                     file: 'target/vprofile-v2.war',
+                     file: 'target/devops-v1.war',
                      type: 'war']
                   ]
                 )
             }
         }
     }
-    post {
-    always {
-        echo 'Slack Notifications.'
-        slackSend channel: '#labbing-on-devops-concepts',
-            color: COLOR_MAP[currentBuild.currentResult],
-            message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
-            }
-    }
+    // post {
+    // always {
+    //     echo 'Slack Notifications.'
+    //     slackSend channel: '#labbing-on-devops-concepts',
+    //         color: COLOR_MAP[currentBuild.currentResult],
+    //         message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
+    //         }
+    // }
 }
