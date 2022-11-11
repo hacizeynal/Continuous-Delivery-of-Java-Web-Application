@@ -35,4 +35,14 @@ We will create private artifact repository on AWS and upload our generated artif
 
 [![Screenshot-2022-11-11-at-20-22-36.png](https://i.postimg.cc/50QWsDgJ/Screenshot-2022-11-11-at-20-22-36.png)](https://postimg.cc/dkFf1HgN)
 
+### Configure Additional Settings on Jenkins
+
+We will configure additional configuration in our previous Jenkins server
+
+* Install necessary plugins (Docker Pipeline ,CloudBees Docker Build and publish,AWS ECR,Pipeline: AWS Steps)
+* Store new credentials on it (credentials for cicdjenkins)
+* Install Docker Engine
+
+Since we will install correct plugins in Jenkins ,we will see **AWS Credentials** type of credentials in Jenkins.
+
 
