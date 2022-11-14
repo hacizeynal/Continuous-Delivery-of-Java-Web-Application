@@ -90,9 +90,9 @@ pipeline{
                   repository: "${RELEASE_REPO}",
                   credentialsId: "${NEXUS_LOGIN}",
                   artifacts: [
-                    [artifactId: 'zhajili-DevOps'+ "${env.BUILD_ID}",
+                    [artifactId: 'zhajili-DevOps',
                      classifier: '',
-                     file: 'target/javaapp-v2.war',
+                     file: 'target/javaapp-v2.war'+ "${env.BUILD_ID}",
                      type: 'war']
                   ]
                 )
