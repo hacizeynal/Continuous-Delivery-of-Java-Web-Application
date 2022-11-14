@@ -108,6 +108,7 @@ pipeline{
                     dockerImage = docker.build(imagename + ":$BUILD_ID", "./Docker-files/app/multistage/Dockerfile")
                 }
             }
+        }
         stage("Upload Docker to ECR"){
             steps{
                 script{
@@ -117,7 +118,6 @@ pipeline{
                     }
                 }
             }
-        }
         }
     }
     post {
