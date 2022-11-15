@@ -20,9 +20,9 @@ pipeline{
         NEXUS_LOGIN = "nexuslogin"
         SONARSCANNER = "sonarscanner"
         SONARSERVER = "sonarserver"
-        registryCredentials = "ecr-us-east-1:cicdjenkins"
-        imagename = "866308211434.dkr.ecr.us-east-1.amazonaws.com/zhajili_devops"
-        applicationRegistry = "https://866308211434.dkr.ecr.us-east-1.amazonaws.com/zhajili_devops"
+        registryCredentials = 'ecr-us-east-1:cicdjenkins'
+        imagename = '866308211434.dkr.ecr.us-east-1.amazonaws.com/zhajili_devops'
+        applicationRegistry = 'https://866308211434.dkr.ecr.us-east-1.amazonaws.com'
 
 
     }
