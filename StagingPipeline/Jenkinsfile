@@ -21,7 +21,7 @@ pipeline{
         SONARSCANNER = "sonarscanner"
         SONARSERVER = "sonarserver"
         registryCredentials = 'ecr:us-east-1:cicdjenkins'
-        imagename = '866308211434.dkr.ecr.us-east-1.amazonaws.com/zhajili_devops'
+        imagename = "866308211434.dkr.ecr.us-east-1.amazonaws.com/zhajili_devops"
         applicationRegistry = 'https://866308211434.dkr.ecr.us-east-1.amazonaws.com'
 
 
@@ -105,7 +105,7 @@ pipeline{
         stage("Build Docker Image"){
             steps{
                 script{
-                    dockerImage = docker.build(imagename + ':$BUILD_TIMESTAMP',"./Docker-files/app/multistage/")
+                    dockerImage = docker.build(imagename + ":$BUILD_TIMESTAMP","./Docker-files/app/multistage/")
                 }
             }
         }
