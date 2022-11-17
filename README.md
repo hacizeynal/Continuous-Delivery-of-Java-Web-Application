@@ -69,7 +69,7 @@ We will create artifact with maven then copy this artifact to another tomcat ser
 
 ### Update Jenkinsfile
 
-We will need to add 3 more variable to in order to upload Container to ECS.
+We will need to add 3 more variable to in order to upload Container to ECS and following commands in order to upload artifacts to ECR.
 
 ```
 registryCredentials = "ecr-us-east-1:cicdjenkins"
@@ -77,4 +77,81 @@ appRegistry = "866308211434.dkr.ecr.us-east-1.amazonaws.com/zhajili_devops"
 applicationRegistry = "https://866308211434.dkr.ecr.us-east-1.amazonaws.com/zhajili_devops"
 
 ```
+
+```
+        stage("Build Docker Image"){
+            steps{
+                script{
+                    dockerImage = docker.build(imagename + ":$BUILD_ID" + "_$BUILD_TIMESTAMP","./Docker-files/app/multistage/")
+                }
+            }
+        }
+        stage("Upload Docker to ECR"){
+            steps{
+                script{
+                    docker.withRegistry (applicationRegistry,registryCredentials){
+                        dockerImage.push("$BUILD_ID")
+                        // dockerImage.push("$BUILD_TIMESTAMP")
+                        dockerImage.push("latest")
+                    }
+                }
+            }
+        }
+
+```
+As a result following logs will be generated after successfull build.
+
+```
+$ docker login -u AWS -p ******** https://866308211434.dkr.ecr.us-east-1.amazonaws.com
+WARNING! Using --password via the CLI is insecure. Use --password-stdin.
+WARNING! Your password will be stored unencrypted in /var/lib/jenkins/workspace/CI_CD_PIPELINE@tmp/40547163-9e27-4671-8cc4-cded0493e5a7/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded
+[Pipeline] {
+[Pipeline] isUnix
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] sh
++ docker tag 866308211434.dkr.ecr.us-east-1.amazonaws.com/zhajili_devops:36_2022-11-17_13_06 866308211434.dkr.ecr.us-east-1.amazonaws.com/zhajili_devops:36
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] isUnix
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] sh
++ docker push 866308211434.dkr.ecr.us-east-1.amazonaws.com/zhajili_devops:36
+The push refers to repository [866308211434.dkr.ecr.us-east-1.amazonaws.com/zhajili_devops]
+aa2e51f5ab8a: Preparing
+f4a670ac65b6: Preparing
+9a797133ad85: Waiting
+13ec7f04879a: Waiting
+76d6ce51a35d: Layer already exists
+8b4173f33a28: Layer already exists
+0439bc492ca9: Layer already exists
+36: digest: sha256:9e3b339ae352612fb1059e1977909a0bcfd4c0e13f2fb750feabf31d9797f1a3 size: 2209
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] isUnix
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] sh
++ docker tag 866308211434.dkr.ecr.us-east-1.amazonaws.com/zhajili_devops:36_2022-11-17_13_06 866308211434.dkr.ecr.us-east-1.amazonaws.com/zhajili_devops:latest
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] isUnix
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] sh
++ docker push 866308211434.dkr.ecr.us-east-1.amazonaws.com/zhajili_devops:latest
+The push refers to repository [866308211434.dkr.ecr.us-east-1.amazonaws.com/zhajili_devops]
+
+```
+We can see that **BUILD_ID** and **BUILD_TIMESTAMP** is appended to docker image as tag ,we can see that our **latest** tag is also added to docker image.
+
+
+
+
+
 
