@@ -114,7 +114,7 @@ pipeline{
                 script{
                     docker.withRegistry (applicationRegistry,registryCredentials){
                         dockerImage.push("$BUILD_ID")
-                        // dockerImage.push("$BUILD_TIMESTAMP")
+                        dockerImage.push("$BUILD_TIMESTAMP")
                         dockerImage.push("latest")
                     }
                 }
