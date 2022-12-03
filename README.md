@@ -148,7 +148,10 @@ f4a670ac65b6: Preparing
 The push refers to repository [866308211434.dkr.ecr.us-east-1.amazonaws.com/zhajili_devops]
 
 ```
-We can see that **BUILD_ID** and **BUILD_TIMESTAMP** is appended to docker image as tag ,we can see that our **latest** tag is also added to docker image.
+We can see that **BUILD_ID** and **BUILD_TIMESTAMP** is appended to docker image ,but we are only pushing docker images to the ECR with  **latest** tag and **BUILD_ID** tag.
+
+### Configure AWS ECS
+
 
 
 
