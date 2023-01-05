@@ -160,6 +160,214 @@ We will create Tasks in ECS in order to run containers .With Amazon ECS, our con
 
 We create service which will use Tasks to create containers. Another very important point is that a Service can be configured to use a load balancer, so that as it creates the Tasks—that is it launches containers defined in the Task Definition—the Service will automatically register the container's EC2 instance with the load balancer. Tasks cannot be configured to use a load balancer, only Services can. Nice article [article](https://www.freecodecamp.org/news/amazon-ecs-terms-and-architecture-807d8c4960fd/) which discusses difference between service and task.
 
+Few verification photos
+
+[![Screenshot-2023-01-05-at-10-13-16.png](https://i.postimg.cc/cCyPnrhJ/Screenshot-2023-01-05-at-10-13-16.png)](https://postimg.cc/TL0k82Z8)
+
+We can see that our task is running and we have load balancer attached via service to the task ,you can see that Launch Type is Fargate which serverless mode of compute part ,we can use EC2 ,but it will be more expensive than Fargate.
+
+[![Screenshot-2023-01-05-at-10-14-48.png](https://i.postimg.cc/MKsdknBj/Screenshot-2023-01-05-at-10-14-48.png)](https://postimg.cc/1fqpw5J9)
+
+### Configure Jenkins for Continuous Delivery - Staging Pipeline
+
+Now we will add few steps to our Jenkinsfile ,so when we will run our pipeline it will fetch docker image from ECR and run it on ECS ,from our Jenkins AWS CLI command will run and it will tell Service to fetch latest docker image from ECR repository ,currently we have following docker image with different tag ,tag ID is taken from BUILD ID.
+
+[![Screenshot-2023-01-05-at-10-27-07.png](https://i.postimg.cc/1thrs6MJ/Screenshot-2023-01-05-at-10-27-07.png)](https://postimg.cc/VSgCFJxC)
+
+We will add 2 new variables to Jenkinsfile and we will create new stage for deploying containers to ECS.
+
+```
+    environment{
+        ecs_cluster_name = "staging"
+        service_name = "STAGING-SERVICE"
+    }
+
+    stage("Deploy to ECS Staging"){
+    steps{
+        withAWS(credentials: "cicdjenkins",region: "us-east-1" ){
+        // force to delete old container deploy new one via service
+        sh 'aws ecs update-service --cluster ${ecs_cluster_name} --service ${service_name} --force-new-deployment'
+        }
+    }
+```
+Let's run the pipeline and see the result
+
+
+```
++ aws ecs update-service --cluster staging --service STAGING-SERVICE --force-new-deployment
+{
+    "service": {
+        "serviceArn": "arn:aws:ecs:us-east-1:866308211434:service/staging/STAGING-SERVICE",
+        "serviceName": "STAGING-SERVICE",
+        "clusterArn": "arn:aws:ecs:us-east-1:866308211434:cluster/staging",
+        "loadBalancers": [
+            {
+                "targetGroupArn": "arn:aws:elasticloadbalancing:us-east-1:866308211434:targetgroup/STAGING-TARGET-GROUP/f82a88e72d98f552",
+                "containerName": "vprofile",
+                "containerPort": 8080
+            }
+        ],
+        "serviceRegistries": [],
+        "status": "ACTIVE",
+        "desiredCount": 1,
+        "runningCount": 1,
+        "pendingCount": 0,
+        "launchType": "FARGATE",
+        "platformVersion": "LATEST",
+        "taskDefinition": "arn:aws:ecs:us-east-1:866308211434:task-definition/task_staging:1",
+        "deploymentConfiguration": {
+            "maximumPercent": 200,
+            "minimumHealthyPercent": 100
+        },
+        "deployments": [
+            {
+                "id": "ecs-svc/6062390510379847045",
+                "status": "PRIMARY",
+                "taskDefinition": "arn:aws:ecs:us-east-1:866308211434:task-definition/task_staging:1",
+                "desiredCount": 0,
+                "pendingCount": 0,
+                "runningCount": 0,
+                "createdAt": 1672914138.248,
+                "updatedAt": 1672914138.248,
+                "launchType": "FARGATE",
+                "platformVersion": "1.4.0",
+                "networkConfiguration": {
+                    "awsvpcConfiguration": {
+                        "subnets": [
+                            "subnet-075a646c201c7b88c",
+                            "subnet-07d38a366dfbba035",
+                            "subnet-05e222a67edc6403a"
+                        ],
+                        "securityGroups": [
+                            "sg-0a0d2d1fbfea4e1f1"
+                        ],
+                        "assignPublicIp": "ENABLED"
+                    }
+                }
+            },
+            {
+                "id": "ecs-svc/1062741110952534332",
+                "status": "ACTIVE",
+                "taskDefinition": "arn:aws:ecs:us-east-1:866308211434:task-definition/task_staging:1",
+                "desiredCount": 1,
+                "pendingCount": 0,
+                "runningCount": 1,
+                "createdAt": 1672909747.903,
+                "updatedAt": 1672909881.155,
+                "launchType": "FARGATE",
+                "platformVersion": "1.4.0",
+                "networkConfiguration": {
+                    "awsvpcConfiguration": {
+                        "subnets": [
+                            "subnet-075a646c201c7b88c",
+                            "subnet-07d38a366dfbba035",
+                            "subnet-05e222a67edc6403a"
+                        ],
+                        "securityGroups": [
+                            "sg-0a0d2d1fbfea4e1f1"
+                        ],
+                        "assignPublicIp": "ENABLED"
+                    }
+                }
+            }
+        ],
+        "roleArn": "arn:aws:iam::866308211434:role/aws-service-role/ecs.amazonaws.com/AWSServiceRoleForECS",
+        "events": [
+            {
+                "id": "a638271a-4cbb-43d0-880a-9372f444eb89",
+                "createdAt": 1672909881.162,
+                "message": "(service STAGING-SERVICE) has reached a steady state."
+            },
+            {
+                "id": "13ab9b88-f7dc-45ff-addc-bd6bea28663b",
+                "createdAt": 1672909881.161,
+                "message": "(service STAGING-SERVICE) (deployment ecs-svc/1062741110952534332) deployment completed."
+            },
+            {
+                "id": "ac1fc499-0266-4f07-842e-3677b31635c2",
+                "createdAt": 1672909783.532,
+                "message": "(service STAGING-SERVICE) registered 1 targets in (target-group arn:aws:elasticloadbalancing:us-east-1:866308211434:targetgroup/STAGING-TARGET-GROUP/f82a88e72d98f552)"
+            },
+            {
+                "id": "e679ed94-66a0-4d32-9823-e35373802e79",
+                "createdAt": 1672909754.807,
+                "message": "(service STAGING-SERVICE) has started 1 tasks: (task 5b834e71829e428abc0b6e0daaae97ca)."
+            }
+        ],
+        "createdAt": 1672909747.903,
+        "placementConstraints": [],
+        "placementStrategy": [],
+        "networkConfiguration": {
+            "awsvpcConfiguration": {
+                "subnets": [
+                    "subnet-075a646c201c7b88c",
+                    "subnet-07d38a366dfbba035",
+                    "subnet-05e222a67edc6403a"
+                ],
+                "securityGroups": [
+                    "sg-0a0d2d1fbfea4e1f1"
+                ],
+                "assignPublicIp": "ENABLED"
+            }
+        },
+        "healthCheckGracePeriodSeconds": 0,
+        "schedulingStrategy": "REPLICA",
+        "deploymentController": {
+            "type": "ECS"
+        },
+        "createdBy": "arn:aws:iam::866308211434:user/zhajili",
+        "enableECSManagedTags": true,
+        "propagateTags": "NONE"
+    }
+}
+
+```
+
+### Configure Production Cluster and Production Pipeline
+
+In this pipeline ,we will only deploy our container to the ECS since it is production and all previous steps have been implemented in Staging ,hence in our Jenkinsfile, we will have only 1 stage which is deploying to ECS.
+
+```
+def COLOR_MAP = [
+    'SUCCESS': 'good', 
+    'FAILURE': 'danger',
+]
+pipeline{
+    agent any
+    tools{
+        maven "MAVEN3"
+        jdk "JDK"
+    }
+    environment{
+
+        ecs_cluster_name = "production"
+        service_name = "PRODUCTION-SERVICE"
+
+    }
+
+    stages{
+        
+        stage("Deploy to ECS Production"){
+            steps{
+               withAWS(credentials: "cicdjenkins",region: "us-east-1" ){
+                // force to delete old container deploy new one via service
+                sh 'aws ecs update-service --cluster ${ecs_cluster_name} --service ${service_name} --force-new-deployment'
+               }
+            }
+
+        }
+    }
+    post {
+    always {
+        echo 'Slack Notifications.'
+        slackSend channel: '#jenkins',
+            color: COLOR_MAP[currentBuild.currentResult],
+            message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
+            }
+    }
+}
+
+```
 
 
 
