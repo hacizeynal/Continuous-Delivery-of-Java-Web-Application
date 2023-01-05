@@ -152,7 +152,13 @@ We can see that **BUILD_ID** and **BUILD_TIMESTAMP** is appended to docker image
 
 ### Configure AWS ECS
 
+We will deploy our Docker container in the Amazon ECS. Amazon ECS will fetch docker images from Amazon ECR. After successful build of pipeline ,we will promote release to the Production environment.
 
+We will create Tasks in ECS in order to run containers .With Amazon ECS, our containers are defined in a task definition that we use to run an individual task or task within a service.
+
+[![Screenshot-2022-12-11-at-21-39-12.png](https://i.postimg.cc/63zdkNW3/Screenshot-2022-12-11-at-21-39-12.png)](https://postimg.cc/njjjmgQb)
+
+We create service which will use Tasks to create containers. Another very important point is that a Service can be configured to use a load balancer, so that as it creates the Tasks—that is it launches containers defined in the Task Definition—the Service will automatically register the container's EC2 instance with the load balancer. Tasks cannot be configured to use a load balancer, only Services can. Nice article [article](https://www.freecodecamp.org/news/amazon-ecs-terms-and-architecture-807d8c4960fd/) which discusses difference between service and task.
 
 
 
