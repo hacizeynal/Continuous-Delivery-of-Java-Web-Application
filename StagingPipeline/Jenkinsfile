@@ -23,6 +23,9 @@ pipeline{
         registryCredentials = 'ecr:us-east-1:cicdjenkins'
         imagename = "866308211434.dkr.ecr.us-east-1.amazonaws.com/zhajili_devops"
         applicationRegistry = 'https://866308211434.dkr.ecr.us-east-1.amazonaws.com'
+        ecs_cluster_name = "staging"
+        service_name = "STAGING-SERVICE"
+
 
 
     }
@@ -120,6 +123,17 @@ pipeline{
                 }
             }
         }
+        stage("Deploy to ECS Staging"){
+            steps{
+               withAWS(credentials: "cicdjenkins",region: "us-east-1" ){
+                // force to delete old container deploy new one  
+                sh 'aws ecs update-service --cluster ${ecs_cluster_name} --service ${service_name} --force-new-deployment'
+               }
+            }
+
+        }
+
+
     }
     post {
     always {
