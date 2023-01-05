@@ -126,7 +126,7 @@ pipeline{
         stage("Deploy to ECS Staging"){
             steps{
                withAWS(credentials: "cicdjenkins",region: "us-east-1" ){
-                // force to delete old container deploy new one  
+                // force to delete old container deploy new one via service
                 sh 'aws ecs update-service --cluster ${ecs_cluster_name} --service ${service_name} --force-new-deployment'
                }
             }
